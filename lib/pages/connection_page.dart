@@ -16,15 +16,6 @@ class _ConnectionPageState extends State<ConnectionPage> {
   String _name = ''; // Variable to store the entered name
   String _password = '';
 
-  void _submitForm() {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-
-      print('Name: $_name');
-      print('Password: $_password');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,5 +90,14 @@ class _ConnectionPageState extends State<ConnectionPage> {
         ),
       ),
     );
+  }
+
+  void _submitForm() {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+
+      print('Name: $_name');
+      print('Password: $_password');
+    }
   }
 }
