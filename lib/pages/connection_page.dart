@@ -4,7 +4,7 @@ import 'package:mobile_avancee_tp1_2/pages/inscription_page.dart';
 import '../dto/signin_request.dart';
 import '../dto/signin_response.dart';
 import '../services/httpService.dart';
-import '../widgets/custom_text_form.dart';
+import '../widgets/custom_text_field.dart';
 import 'home_page.dart';
 
 class ConnectionPage extends StatefulWidget {
@@ -36,6 +36,7 @@ class _ConnectionPageState extends State<ConnectionPage> {
         print(e);
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text('Il y a eux une Erreur')));
+        return;
       }
     }
   }
@@ -59,9 +60,8 @@ class _ConnectionPageState extends State<ConnectionPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CustomTextForm(
+              CustomTextField(
                 name: 'Username',
-                isPassword: false,
                 validator: (value) {
                   if (_name.isEmpty) {
                     return "Vous devez entrez un nom d'utilisateur";
@@ -72,7 +72,7 @@ class _ConnectionPageState extends State<ConnectionPage> {
                   _name = value!;
                 },
               ),
-              CustomTextForm(
+              CustomTextField(
                 name: 'Password',
                 isPassword: true,
                 validator: (value) {

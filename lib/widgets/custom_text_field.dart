@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class CustomTextForm extends StatefulWidget {
-  const CustomTextForm(
+class CustomTextField extends StatefulWidget {
+  const CustomTextField(
       {super.key,
       required this.name,
-      required this.isPassword,
+      this.isPassword = false,
       required this.validator,
       required this.saving});
 
@@ -14,11 +14,11 @@ class CustomTextForm extends StatefulWidget {
   final Function(String?) saving;
 
   @override
-  State<CustomTextForm> createState() => _CustomTextFormState();
+  State<CustomTextField> createState() => _CustomTextFieldState();
 }
 
-class _CustomTextFormState extends State<CustomTextForm> {
-  _CustomTextFormState();
+class _CustomTextFieldState extends State<CustomTextField> {
+  _CustomTextFieldState();
 
   @override
   Widget build(BuildContext context) {

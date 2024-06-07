@@ -5,7 +5,7 @@ import 'package:mobile_avancee_tp1_2/pages/connection_page.dart';
 import 'package:mobile_avancee_tp1_2/pages/home_page.dart';
 import 'package:mobile_avancee_tp1_2/services/httpService.dart';
 
-import '../widgets/custom_text_form.dart';
+import '../widgets/custom_text_field.dart';
 
 class InscriptionPage extends StatefulWidget {
   const InscriptionPage({super.key});
@@ -55,9 +55,8 @@ class _InscriptionPageState extends State<InscriptionPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CustomTextForm(
+              CustomTextField(
                 name: 'Username',
-                isPassword: false,
                 validator: (value) {
                   if (_name.isEmpty) {
                     return "Vous devez entrez un nom d'utilisateur";
@@ -68,7 +67,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
                   _name = value!;
                 },
               ),
-              CustomTextForm(
+              CustomTextField(
                 name: 'Password',
                 isPassword: true,
                 validator: (value) {
@@ -81,12 +80,15 @@ class _InscriptionPageState extends State<InscriptionPage> {
                   _password = value!;
                 },
               ),
-              CustomTextForm(
+              CustomTextField(
                 name: 'Confirm password',
                 isPassword: true,
                 validator: (value) {
                   if (value!.isEmpty) {
                     return "Veuillez confirmé votre mot de passe";
+                  }
+                  else if(value != _password){
+                    return "Votre confirmation n'est pas comme votre mot de passe";
                   }
                   return null;
                 },

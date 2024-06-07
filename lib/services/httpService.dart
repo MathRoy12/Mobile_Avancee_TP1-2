@@ -1,6 +1,7 @@
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:mobile_avancee_tp1_2/dto/add_task_request.dart';
 import 'package:mobile_avancee_tp1_2/dto/home_item_response.dart';
 import 'package:mobile_avancee_tp1_2/dto/signup_request.dart';
 
@@ -33,8 +34,13 @@ Future<SigninResponse> signup(SignupRequest req) async {
 }
 
 Future<SigninResponse> signin(SigninRequest req) async {
-    var response =
-        await SingletonDio.getDio().post('${url}id/signin', data: req.toJson());
-    print(response);
-    return SigninResponse.fromJson(response.data);
+  var response =
+      await SingletonDio.getDio().post('${url}id/signin', data: req.toJson());
+  print(response);
+  return SigninResponse.fromJson(response.data);
+}
+
+Future<String> addTask(AddTaskRequest req) async {
+  var response = await SingletonDio.getDio().post('${url}add',data: req.toJson());
+  return response.data;
 }
