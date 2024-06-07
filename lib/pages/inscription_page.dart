@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_avancee_tp1_2/pages/connection_page.dart';
+
+import '../widgets/custom_text_form.dart';
 
 class InscriptionPage extends StatefulWidget {
   const InscriptionPage({super.key});
@@ -38,59 +41,44 @@ class _InscriptionPageState extends State<InscriptionPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: TextFormField(
-                  decoration: const InputDecoration(
-                      label: Text("Username"), border: OutlineInputBorder()),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "Veuillez écrire votre nom d'utilisateur";
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _name = value!;
-                  },
-                ),
+              CustomTextForm(
+                name: 'Username',
+                isPassword: false,
+                validator: (value) {
+                  if (_name.isEmpty) {
+                    return "Vous devez entrez un nom d'utilisateur";
+                  }
+                  return null;
+                },
+                saving: (value) {
+                  _name = value!;
+                },
               ),
-              Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: TextFormField(
-                  obscureText: true,
-                  enableSuggestions: false,
-                  autocorrect: false,
-                  decoration: const InputDecoration(
-                      label: Text("Password"), border: OutlineInputBorder()),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "Veuillez écrire votre mot de passe";
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _password = value!;
-                  },
-                ),
+              CustomTextForm(
+                name: 'Password',
+                isPassword: true,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "Veuillez écrire votre mot de passe";
+                  }
+                  return null;
+                },
+                saving: (value) {
+                  _password = value!;
+                },
               ),
-              Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: TextFormField(
-                  obscureText: true,
-                  enableSuggestions: false,
-                  autocorrect: false,
-                  decoration: const InputDecoration(
-                      label: Text("Confirm password"), border: OutlineInputBorder()),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "Veuillez écrire votre mot de passe";
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _confirmPassword = value!;
-                  },
-                ),
+              CustomTextForm(
+                name: 'Confirm password',
+                isPassword: true,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "Veuillez confirmé votre mot de passe";
+                  }
+                  return null;
+                },
+                saving: (value) {
+                  _confirmPassword = value!;
+                },
               ),
               const SizedBox(height: 20),
               MaterialButton(
@@ -102,7 +90,12 @@ class _InscriptionPageState extends State<InscriptionPage> {
                 ),
               ),
               MaterialButton(
-                onPressed: () {Navigator.of(context).pop();},
+                onPressed: () {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ConnectionPage()));
+                },
                 color: Colors.blue,
                 child: const Text(
                   'Connection',
