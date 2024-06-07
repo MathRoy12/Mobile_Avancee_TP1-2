@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
 class InscriptionPage extends StatefulWidget {
-  const InscriptionPage({super.key, required this.title});
-
-  final String title;
+  const InscriptionPage({super.key});
 
   @override
   State<InscriptionPage> createState() => _InscriptionPageState();

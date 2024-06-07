@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile_avancee_tp1_2/pages/inscription_page.dart';
 
 class ConnectionPage extends StatefulWidget {
-  const ConnectionPage({super.key, required this.title});
-
-  final String title;
+  const ConnectionPage({super.key});
 
   @override
   State<ConnectionPage> createState() => _ConnectionPageState();
@@ -76,8 +74,8 @@ class _ConnectionPageState extends State<ConnectionPage> {
               ),
               MaterialButton(
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const InscriptionPage(title: "Inscription")));
+                  Navigator.push(context, MaterialPageRoute(
+                      builder: (context) => const InscriptionPage()));
                 },
                 color: Colors.blue,
                 child: const Text(
