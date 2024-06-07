@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_avancee_tp1_2/pages/inscription_page.dart';
 
+import '../dto/signin_request.dart';
+import '../dto/signin_response.dart';
+import '../services/httpService.dart';
 import '../widgets/custom_text_form.dart';
+import 'home_page.dart';
 
 class ConnectionPage extends StatefulWidget {
   const ConnectionPage({super.key});
@@ -16,12 +20,23 @@ class _ConnectionPageState extends State<ConnectionPage> {
   String _name = '';
   String _password = '';
 
-  void _submitForm() {
+  void _submitForm() async{
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-
-      print('Name: $_name');
-      print('Password: $_password');
+      SigninRequest req = SigninRequest();
+      req.password = _password;
+      req.username = _name;
+      try{
+        SigninResponse res = await signin(req);
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+                builder: (context) => const HomePage()));
+      }
+      catch(e){
+        print(e);
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Il y a eux une Erreur')));
+      }
     }
   }
 

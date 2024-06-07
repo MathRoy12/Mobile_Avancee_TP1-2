@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_avancee_tp1_2/dto/signin_response.dart';
+import 'package:mobile_avancee_tp1_2/dto/signup_request.dart';
 import 'package:mobile_avancee_tp1_2/pages/connection_page.dart';
+import 'package:mobile_avancee_tp1_2/pages/home_page.dart';
+import 'package:mobile_avancee_tp1_2/services/httpService.dart';
 
 import '../widgets/custom_text_form.dart';
 
@@ -17,13 +21,23 @@ class _InscriptionPageState extends State<InscriptionPage> {
   String _password = '';
   String _confirmPassword = '';
 
-  void _submitForm() {
+  void _submitForm() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-
-      print('Name: $_name');
-      print('Password: $_password');
-      print('Confirm password: $_confirmPassword');
+      SignupRequest req = SignupRequest();
+      req.password = _password;
+      req.username = _name;
+      try{
+        SigninResponse res = await signup(req);
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+                builder: (context) => const HomePage()));
+      }
+      catch(e){
+        print(e);
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Il y a eux une Erreur')));
+      }
     }
   }
 
