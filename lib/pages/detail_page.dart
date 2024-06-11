@@ -35,8 +35,8 @@ class _DetailPageState extends State<DetailPage> {
     setState(() {});
   }
 
-  void save(){
-    saveProgress(widget.id, percentageDone);
+  void save() async{
+    await saveProgress(widget.id, percentageDone);
 
     Navigator.popUntil(context, (route) => route.isFirst);
   }
