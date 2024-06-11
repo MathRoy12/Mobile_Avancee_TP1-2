@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_avancee_tp1_2/pages/connection_page.dart';
 import 'package:mobile_avancee_tp1_2/pages/home_page.dart';
-import 'package:mobile_avancee_tp1_2/services/httpService.dart';
+import 'package:mobile_avancee_tp1_2/services/http_service.dart';
 
 import '../dto/transfer.dart';
 import '../widgets/custom_text_field.dart';

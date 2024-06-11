@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_avancee_tp1_2/pages/home_page.dart';
-import 'package:mobile_avancee_tp1_2/services/httpService.dart';
+import 'package:mobile_avancee_tp1_2/services/http_service.dart';
 import 'package:mobile_avancee_tp1_2/widgets/custom_text_field.dart';
+import 'package:mobile_avancee_tp1_2/widgets/my_drawer.dart';
 
 import '../dto/transfer.dart';
 
@@ -37,9 +38,7 @@ class _CreationPageState extends State<CreationPage> {
 
       await addTask(req);
 
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-              builder: (context) => const HomePage()));
+      Navigator.popUntil(context, (route) => route.isFirst);
     }
   }
 
@@ -50,6 +49,7 @@ class _CreationPageState extends State<CreationPage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('New Task'),
       ),
+      drawer: const MyDrawer(),
       body: Center(
         child: Form(
           key: _formKey,

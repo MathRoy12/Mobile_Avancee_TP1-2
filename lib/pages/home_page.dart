@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_avancee_tp1_2/pages/creation_page.dart';
-import 'package:mobile_avancee_tp1_2/services/httpService.dart';
+import 'package:mobile_avancee_tp1_2/services/http_service.dart';
+import 'package:mobile_avancee_tp1_2/widgets/my_drawer.dart';
 
 import '../dto/transfer.dart';
 import 'detail_page.dart';
@@ -20,20 +21,20 @@ class _HomePageState extends State<HomePage> {
     setState(() {});
   }
 
-  @override
-  void initState() {
-    super.initState();
-    fillList();
-  }
-
   void createNew() {
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const CreationPage()));
+        context, MaterialPageRoute(builder: (context) => const CreationPage())).then((value) => fillList());
   }
 
   detail(int id) {
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => DetailPage(id: id)));
+        context, MaterialPageRoute(builder: (context) => DetailPage(id: id))).then((value) => fillList());
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fillList();
   }
 
   @override
@@ -43,6 +44,7 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('Accueil'),
       ),
+      drawer: const MyDrawer(),
       body: Center(
         child: ListView.builder(
             itemCount: items.length,

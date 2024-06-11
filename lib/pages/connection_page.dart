@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile_avancee_tp1_2/pages/inscription_page.dart';
 
 import '../dto/transfer.dart';
-import '../services/httpService.dart';
+import '../services/http_service.dart';
 import '../widgets/custom_text_field.dart';
 import 'home_page.dart';
 
