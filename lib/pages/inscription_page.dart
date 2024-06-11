@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_avancee_tp1_2/dto/signin_response.dart';
-import 'package:mobile_avancee_tp1_2/dto/signup_request.dart';
 import 'package:mobile_avancee_tp1_2/pages/connection_page.dart';
 import 'package:mobile_avancee_tp1_2/pages/home_page.dart';
 import 'package:mobile_avancee_tp1_2/services/httpService.dart';
 
+import '../dto/transfer.dart';
 import '../widgets/custom_text_field.dart';
 
 class InscriptionPage extends StatefulWidget {

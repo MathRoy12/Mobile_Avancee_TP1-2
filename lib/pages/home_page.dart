@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile_avancee_tp1_2/pages/creation_page.dart';
 import 'package:mobile_avancee_tp1_2/services/httpService.dart';
 
-import '../dto/home_item_response.dart';
+import '../dto/transfer.dart';
 import 'detail_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       ListTile(
                         title: Text(items[index].name),
-                        subtitle: Text("deadline : ${items[index].deadline}"),
+                        subtitle: Text("Deadline : ${items[index].deadline}"),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,

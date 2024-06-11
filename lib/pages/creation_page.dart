@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_avancee_tp1_2/pages/home_page.dart';
+import 'package:mobile_avancee_tp1_2/services/httpService.dart';
 import 'package:mobile_avancee_tp1_2/widgets/custom_text_field.dart';
+
+import '../dto/transfer.dart';
 
 class CreationPage extends StatefulWidget {
   const CreationPage({super.key});
@@ -20,13 +24,22 @@ class _CreationPageState extends State<CreationPage> {
     if(picked != null && picked!= _deadline){
       _deadline = picked;
     }
+    setState(() {});
   }
 
   void _submitForm() async{
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
+      AddTaskRequest req = AddTaskRequest();
+      req.deadline = _deadline;
+      req.name = _name;
 
+      await addTask(req);
+
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+              builder: (context) => const HomePage()));
     }
   }
 
@@ -55,6 +68,7 @@ class _CreationPageState extends State<CreationPage> {
                   return null;
                 },
               ),
+            Text('DeadLine: ${_deadline.year}/${_deadline.month}/${_deadline.day}'),
               MaterialButton(
                 onPressed: () => selectDate(context),
                 color: Colors.blue,
