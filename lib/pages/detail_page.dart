@@ -19,7 +19,7 @@ class DetailPage extends StatefulWidget {
 }
 
 class _DetailPageState extends State<DetailPage> {
-  TaskDetailResponse res = TaskDetailResponse();
+  TaskDetailPhotoResponse res = TaskDetailPhotoResponse();
   XFile? pickedImage;
   String imageURL = "";
 
@@ -35,8 +35,8 @@ class _DetailPageState extends State<DetailPage> {
   getImage() async {
     ImagePicker picker = ImagePicker();
     pickedImage = await picker.pickImage(source: ImageSource.gallery);
-    if(pickedImage != null){
-      String res = await saveImage(pickedImage!,widget.id);
+    if (pickedImage != null) {
+      String res = await saveImage(pickedImage!, widget.id);
       imageURL = 'http://10.0.2.2:8080/file/$res';
     }
     setState(() {});
@@ -45,6 +45,9 @@ class _DetailPageState extends State<DetailPage> {
   void loadDetail() async {
     res = await getTaskDetail(widget.id);
     percentageDone = res.percentageDone;
+    if (res.photoId > 0) {
+      imageURL = 'http://10.0.2.2:8080/file/${res.photoId}';
+    }
     setState(() {});
   }
 
@@ -89,7 +92,11 @@ class _DetailPageState extends State<DetailPage> {
                     setState(() {});
                   }),
               (imageURL == "")
-                  ? const Text("Vous n'avez pas d'image sélectionner")
+                  ? const Icon(
+                      Icons.add,
+                      color: Colors.grey,
+                      size: 70,
+                    )
                   : Image.network(imageURL),
               MaterialButton(
                 onPressed: getImage,

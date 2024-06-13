@@ -49,9 +49,9 @@ Future<String> addTask(AddTaskRequest req) async {
   return response.data;
 }
 
-Future<TaskDetailResponse> getTaskDetail(int id) async {
-  var response = await SingletonDio.getDio().get('${url}api/detail/$id');
-  return TaskDetailResponse.fromJson(response.data);
+Future<TaskDetailPhotoResponse> getTaskDetail(int id) async {
+  var response = await SingletonDio.getDio().get('${url}api/detail/photo/$id');
+  return TaskDetailPhotoResponse.fromJson(response.data);
 }
 
 Future<String> saveProgress(int id, int progressValue) async {

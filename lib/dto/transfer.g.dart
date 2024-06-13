@@ -116,7 +116,8 @@ TaskDetailPhotoResponse _$TaskDetailPhotoResponseFromJson(
       ..deadline = _fromJson(json['deadline'] as String)
       ..events = (json['events'] as List<dynamic>)
           .map((e) => ProgressEvent.fromJson(e as Map<String, dynamic>))
-          .toList();
+          .toList()
+      ..photoId = (json['photoId'] as num).toInt();
 
 Map<String, dynamic> _$TaskDetailPhotoResponseToJson(
         TaskDetailPhotoResponse instance) =>
@@ -127,4 +128,5 @@ Map<String, dynamic> _$TaskDetailPhotoResponseToJson(
       'percentageTimeSpent': instance.percentageTimeSpent,
       'deadline': _toJson(instance.deadline),
       'events': instance.events,
+      'photoId': instance.photoId,
     };

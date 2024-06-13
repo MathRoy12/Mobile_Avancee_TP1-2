@@ -125,6 +125,7 @@ class TaskDetailPhotoResponse{
   @JsonKey(fromJson: _fromJson, toJson: _toJson)
   DateTime deadline = DateTime(0);
   List<ProgressEvent> events = [];
+  int photoId = 0;
 
   factory TaskDetailPhotoResponse.fromJson(Map<String, dynamic> json) => _$TaskDetailPhotoResponseFromJson(json);
 
