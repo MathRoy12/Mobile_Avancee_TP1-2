@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile_avancee_tp1_2/services/http_service.dart';
 import 'package:mobile_avancee_tp1_2/widgets/my_drawer.dart';
@@ -17,6 +20,8 @@ class DetailPage extends StatefulWidget {
 
 class _DetailPageState extends State<DetailPage> {
   TaskDetailResponse res = TaskDetailResponse();
+  XFile? pickedImage;
+  String imageURL = "";
 
   int percentageDone = 0;
 
@@ -25,6 +30,16 @@ class _DetailPageState extends State<DetailPage> {
     super.initState();
 
     loadDetail();
+  }
+
+  getImage() async {
+    ImagePicker picker = ImagePicker();
+    pickedImage = await picker.pickImage(source: ImageSource.gallery);
+    if(pickedImage != null){
+      String res = await saveImage(pickedImage!,widget.id);
+      imageURL = 'http://10.0.2.2:8080/file/$res';
+    }
+    setState(() {});
   }
 
   void loadDetail() async {
@@ -72,7 +87,18 @@ class _DetailPageState extends State<DetailPage> {
                   onChanged: (value) {
                     percentageDone = value.round();
                     setState(() {});
-                  })
+                  }),
+              (imageURL == "")
+                  ? const Text("Vous n'avez pas d'image sélectionner")
+                  : Image.network(imageURL),
+              MaterialButton(
+                onPressed: getImage,
+                color: Colors.blue,
+                child: const Text(
+                  "Sélectionner une image",
+                  style: TextStyle(color: Colors.white),
+                ),
+              )
             ],
           ),
         ),

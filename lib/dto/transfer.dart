@@ -35,6 +35,24 @@ class HomeItemResponse{
 }
 
 @JsonSerializable()
+class HomeItemPhotoResponse{
+
+  HomeItemPhotoResponse();
+
+  int id = 0;
+  String name = "";
+  int percentageDone = 0;
+  double percentageTimeSpent = 0;
+  @JsonKey(fromJson: _fromJson, toJson: _toJson)
+  DateTime deadline = DateTime(0);
+  int photoId = 0;
+
+  factory HomeItemPhotoResponse.fromJson(Map<String, dynamic> json) => _$HomeItemPhotoResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$HomeItemPhotoResponseToJson(this);
+}
+
+@JsonSerializable()
 class ProgressEvent{
 
   ProgressEvent();
@@ -93,6 +111,24 @@ class TaskDetailResponse{
   factory TaskDetailResponse.fromJson(Map<String, dynamic> json) => _$TaskDetailResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$TaskDetailResponseToJson(this);
+}
+
+@JsonSerializable()
+class TaskDetailPhotoResponse{
+
+  TaskDetailPhotoResponse();
+
+  int id = 0;
+  String name = "";
+  int percentageDone = 0;
+  double percentageTimeSpent = 0;
+  @JsonKey(fromJson: _fromJson, toJson: _toJson)
+  DateTime deadline = DateTime(0);
+  List<ProgressEvent> events = [];
+
+  factory TaskDetailPhotoResponse.fromJson(Map<String, dynamic> json) => _$TaskDetailPhotoResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$TaskDetailPhotoResponseToJson(this);
 }
 
 final _dateFormatter = DateFormat("yyy-MM-dd'T'HH:mm:ss");

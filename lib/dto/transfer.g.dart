@@ -34,6 +34,27 @@ Map<String, dynamic> _$HomeItemResponseToJson(HomeItemResponse instance) =>
       'deadline': _toJson(instance.deadline),
     };
 
+HomeItemPhotoResponse _$HomeItemPhotoResponseFromJson(
+        Map<String, dynamic> json) =>
+    HomeItemPhotoResponse()
+      ..id = (json['id'] as num).toInt()
+      ..name = json['name'] as String
+      ..percentageDone = (json['percentageDone'] as num).toInt()
+      ..percentageTimeSpent = (json['percentageTimeSpent'] as num).toDouble()
+      ..deadline = _fromJson(json['deadline'] as String)
+      ..photoId = (json['photoId'] as num).toInt();
+
+Map<String, dynamic> _$HomeItemPhotoResponseToJson(
+        HomeItemPhotoResponse instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+      'percentageDone': instance.percentageDone,
+      'percentageTimeSpent': instance.percentageTimeSpent,
+      'deadline': _toJson(instance.deadline),
+      'photoId': instance.photoId,
+    };
+
 ProgressEvent _$ProgressEventFromJson(Map<String, dynamic> json) =>
     ProgressEvent()
       ..value = (json['value'] as num).toInt()
@@ -76,6 +97,29 @@ TaskDetailResponse _$TaskDetailResponseFromJson(Map<String, dynamic> json) =>
           .toList();
 
 Map<String, dynamic> _$TaskDetailResponseToJson(TaskDetailResponse instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+      'percentageDone': instance.percentageDone,
+      'percentageTimeSpent': instance.percentageTimeSpent,
+      'deadline': _toJson(instance.deadline),
+      'events': instance.events,
+    };
+
+TaskDetailPhotoResponse _$TaskDetailPhotoResponseFromJson(
+        Map<String, dynamic> json) =>
+    TaskDetailPhotoResponse()
+      ..id = (json['id'] as num).toInt()
+      ..name = json['name'] as String
+      ..percentageDone = (json['percentageDone'] as num).toInt()
+      ..percentageTimeSpent = (json['percentageTimeSpent'] as num).toDouble()
+      ..deadline = _fromJson(json['deadline'] as String)
+      ..events = (json['events'] as List<dynamic>)
+          .map((e) => ProgressEvent.fromJson(e as Map<String, dynamic>))
+          .toList();
+
+Map<String, dynamic> _$TaskDetailPhotoResponseToJson(
+        TaskDetailPhotoResponse instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,

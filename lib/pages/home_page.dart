@@ -16,7 +16,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<HomeItemResponse> items = [];
+  List<HomeItemPhotoResponse> items = [];
 
   void fillList() async {
     items = await getTasks();
@@ -67,6 +67,10 @@ class _HomePageState extends State<HomePage> {
                         subtitle: Text(
                             "${S.of(context).deadline} : ${DateFormat(S.current.dateFormat).format(items[index].deadline)}"),
                       ),
+                      (items[index].photoId > 0)
+                          ? Image.network(
+                              "http://10.0.2.2:8080/file/${items[index].photoId}")
+                          : const SizedBox(),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
