@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_avancee_tp1_2/pages/home_page.dart';
 import 'package:mobile_avancee_tp1_2/services/http_service.dart';
 import 'package:mobile_avancee_tp1_2/widgets/custom_text_field.dart';
 import 'package:mobile_avancee_tp1_2/widgets/my_drawer.dart';
 
 import '../dto/transfer.dart';
+import '../generated/l10n.dart';
 
 class CreationPage extends StatefulWidget {
   const CreationPage({super.key});
@@ -47,7 +47,7 @@ class _CreationPageState extends State<CreationPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('New Task'),
+        title: Text(S.of(context).newTask),
       ),
       drawer: const MyDrawer(),
       body: Center(
@@ -57,24 +57,24 @@ class _CreationPageState extends State<CreationPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CustomTextField(
-                name: 'name',
+                name: S.of(context).name,
                 saving: (value) {
                   _name = value!;
                 },
                 validator: (value) {
                   if (value!.isEmpty) {
-                    return "La tache doit avoir un nom";
+                    return S.of(context).nameValidation;
                   }
                   return null;
                 },
               ),
-            Text('DeadLine: ${_deadline.year}/${_deadline.month}/${_deadline.day}'),
+            Text('${S.of(context).deadline} ${_deadline.year}/${_deadline.month}/${_deadline.day}'),
               MaterialButton(
                 onPressed: () => selectDate(context),
                 color: Colors.blue,
-                child: const Text(
-                  "Select deadline",
-                  style: TextStyle(color: Colors.white),
+                child: Text(
+                  S.of(context).selectDeadline,
+                  style: const TextStyle(color: Colors.white),
                 ),
               ),
             ],

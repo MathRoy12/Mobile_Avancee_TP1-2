@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mobile_avancee_tp1_2/pages/creation_page.dart';
 import 'package:mobile_avancee_tp1_2/services/http_service.dart';
 import 'package:mobile_avancee_tp1_2/widgets/my_drawer.dart';
 
 import '../dto/transfer.dart';
+import '../generated/l10n.dart';
 import 'detail_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -22,13 +24,15 @@ class _HomePageState extends State<HomePage> {
   }
 
   void createNew() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const CreationPage())).then((value) => fillList());
+    Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const CreationPage()))
+        .then((value) => fillList());
   }
 
   detail(int id) {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => DetailPage(id: id))).then((value) => fillList());
+    Navigator.push(context,
+            MaterialPageRoute(builder: (context) => DetailPage(id: id)))
+        .then((value) => fillList());
   }
 
   @override
@@ -42,7 +46,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Accueil'),
+        title: Text(S.of(context).home),
       ),
       drawer: const MyDrawer(),
       body: Center(
@@ -60,14 +64,18 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       ListTile(
                         title: Text(items[index].name),
-                        subtitle: Text("Deadline : ${items[index].deadline}"),
+                        subtitle: Text(
+                            "${S.of(context).deadline} : ${DateFormat(S.current.dateFormat).format(items[index].deadline)}"),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Text("${items[index].percentageDone}% d'effectuer"),
-                          Text(
-                              "${items[index].percentageTimeSpent}% du temps d'écoulé")
+                          Text(S
+                              .of(context)
+                              .percentageDoneHome(items[index].percentageDone)),
+                          Text(S
+                              .of(context)
+                              .timeElapsed(items[index].percentageTimeSpent))
                         ],
                       ),
                     ],

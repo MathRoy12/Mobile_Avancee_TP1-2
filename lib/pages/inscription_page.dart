@@ -4,6 +4,7 @@ import 'package:mobile_avancee_tp1_2/pages/home_page.dart';
 import 'package:mobile_avancee_tp1_2/services/http_service.dart';
 
 import '../dto/transfer.dart';
+import '../generated/l10n.dart';
 import '../widgets/custom_text_field.dart';
 
 class InscriptionPage extends StatefulWidget {
@@ -26,16 +27,14 @@ class _InscriptionPageState extends State<InscriptionPage> {
       SignupRequest req = SignupRequest();
       req.password = _password;
       req.username = _name;
-      try{
+      try {
         SigninResponse res = await signup(req);
         Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-                builder: (context) => const HomePage()));
-      }
-      catch(e){
+            MaterialPageRoute(builder: (context) => const HomePage()));
+      } catch (e) {
         print(e);
         ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('Il y a eux une Erreur')));
+            .showSnackBar(SnackBar(content: Text(S.current.globalError)));
       }
     }
   }
@@ -45,7 +44,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text("Inscription"),
+        title: Text(S.of(context).inscription),
       ),
       body: Container(
         padding: const EdgeInsets.all(10),
@@ -55,10 +54,10 @@ class _InscriptionPageState extends State<InscriptionPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CustomTextField(
-                name: 'Username',
+                name: S.of(context).username,
                 validator: (value) {
                   if (_name.isEmpty) {
-                    return "Vous devez entrez un nom d'utilisateur";
+                    return S.of(context).usernameValidation;
                   }
                   return null;
                 },
@@ -67,11 +66,11 @@ class _InscriptionPageState extends State<InscriptionPage> {
                 },
               ),
               CustomTextField(
-                name: 'Password',
+                name: S.of(context).password,
                 isPassword: true,
                 validator: (value) {
                   if (value!.isEmpty) {
-                    return "Veuillez écrire votre mot de passe";
+                    return S.of(context).passwordValidation;
                   }
                   return null;
                 },
@@ -80,14 +79,13 @@ class _InscriptionPageState extends State<InscriptionPage> {
                 },
               ),
               CustomTextField(
-                name: 'Confirm password',
+                name: S.of(context).confirmPassword,
                 isPassword: true,
                 validator: (value) {
                   if (value!.isEmpty) {
-                    return "Veuillez confirmé votre mot de passe";
-                  }
-                  else if(value != _password){
-                    return "Votre confirmation n'est pas comme votre mot de passe";
+                    return S.of(context).confirmPasswordValidation;
+                  } else if (value != _password) {
+                    return S.of(context).samePasswordValidation;
                   }
                   return null;
                 },
@@ -99,9 +97,9 @@ class _InscriptionPageState extends State<InscriptionPage> {
               MaterialButton(
                 onPressed: _submitForm,
                 color: Colors.blue,
-                child: const Text(
-                  'Inscription',
-                  style: TextStyle(color: Colors.white),
+                child: Text(
+                  S.of(context).inscription,
+                  style: const TextStyle(color: Colors.white),
                 ),
               ),
               MaterialButton(
@@ -112,9 +110,9 @@ class _InscriptionPageState extends State<InscriptionPage> {
                           builder: (context) => const ConnectionPage()));
                 },
                 color: Colors.blue,
-                child: const Text(
-                  'Connection',
-                  style: TextStyle(color: Colors.white),
+                child: Text(
+                  S.of(context).connection,
+                  style: const TextStyle(color: Colors.white),
                 ),
               ),
             ],

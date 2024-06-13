@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:mobile_avancee_tp1_2/pages/home_page.dart';
 import 'package:mobile_avancee_tp1_2/services/http_service.dart';
 import 'package:mobile_avancee_tp1_2/widgets/my_drawer.dart';
 
 import '../dto/transfer.dart';
+import '../generated/l10n.dart';
 
 class DetailPage extends StatefulWidget {
   const DetailPage({super.key, required this.id});
@@ -17,8 +17,6 @@ class DetailPage extends StatefulWidget {
 
 class _DetailPageState extends State<DetailPage> {
   TaskDetailResponse res = TaskDetailResponse();
-
-  final _globalDateFormater = DateFormat("MMMM dd y");
 
   int percentageDone = 0;
 
@@ -35,7 +33,7 @@ class _DetailPageState extends State<DetailPage> {
     setState(() {});
   }
 
-  void save() async{
+  void save() async {
     await saveProgress(widget.id, percentageDone);
 
     Navigator.popUntil(context, (route) => route.isFirst);
@@ -46,7 +44,7 @@ class _DetailPageState extends State<DetailPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Detail'),
+        title: Text(S.of(context).detail),
       ),
       drawer: const MyDrawer(),
       body: Center(
@@ -63,13 +61,13 @@ class _DetailPageState extends State<DetailPage> {
               ),
               const SizedBox(height: 20),
               Text(
-                  "Dealine: ${_globalDateFormater.format(res.deadline)} (${res.percentageTimeSpent}%)"),
+                  "${S.of(context).deadline}: ${DateFormat(S.current.dateFormat).format(res.deadline)} (${res.percentageTimeSpent}%)"),
               const SizedBox(height: 20),
-            const Text("Percentage done:"),
+              Text(S.of(context).percentageDoneDetail),
               Slider(
                   value: percentageDone.toDouble(),
                   max: 100,
-                  divisions:100,
+                  divisions: 100,
                   label: '$percentageDone',
                   onChanged: (value) {
                     percentageDone = value.round();
@@ -80,7 +78,7 @@ class _DetailPageState extends State<DetailPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed:save,
+        onPressed: save,
         child: const Icon(Icons.save),
       ),
     );

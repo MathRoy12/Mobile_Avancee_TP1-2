@@ -4,6 +4,7 @@ import 'package:mobile_avancee_tp1_2/pages/home_page.dart';
 import 'package:mobile_avancee_tp1_2/services/http_service.dart';
 import 'package:mobile_avancee_tp1_2/services/username_service.dart';
 
+import '../generated/l10n.dart';
 import '../pages/creation_page.dart';
 
 class MyDrawer extends StatefulWidget {
@@ -54,17 +55,17 @@ class _MyDrawerState extends State<MyDrawer> {
               ))),
           ListTile(
             leading: const Icon(Icons.home),
-            title: const Text("Home"),
+            title: Text(S.of(context).home),
             onTap: goHome,
           ),
           ListTile(
             leading: const Icon(Icons.add),
-            title: const Text("New Task"),
+            title: Text(S.of(context).newTask),
             onTap: createNew,
           ),
           ListTile(
             leading: const Icon(Icons.logout),
-            title: const Text("Log out"),
+            title: Text(S.of(context).logout),
             onTap: logout,
           ),
         ],
