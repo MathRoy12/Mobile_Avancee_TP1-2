@@ -20,23 +20,36 @@ class _ConnectionPageState extends State<ConnectionPage> {
   String _name = '';
   String _password = '';
 
+  bool btnIsEnable = true;
+
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+      btnIsEnable = false;
+      setState(() {});
+
       SigninRequest req = SigninRequest();
       req.password = _password;
       req.username = _name;
       try {
         SigninResponse res = await signin(req);
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const HomePage()));
+        navigateToHome();
       } catch (e) {
-        print(e);
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(S.current.globalError)));
-        return;
+        btnIsEnable = true;
+        showSnackBar();
+        setState(() {});
       }
     }
+  }
+
+  void showSnackBar() {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(S.current.globalError)));
+  }
+
+  void navigateToHome() {
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const HomePage()));
   }
 
   navigateInscription() {
@@ -48,13 +61,8 @@ class _ConnectionPageState extends State<ConnectionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme
-            .of(context)
-            .colorScheme
-            .inversePrimary,
-        title: Text(S
-            .of(context)
-            .connection),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text(S.of(context).connection),
       ),
       body: Container(
         padding: const EdgeInsets.all(10),
@@ -64,14 +72,10 @@ class _ConnectionPageState extends State<ConnectionPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CustomTextField(
-                name: S
-                    .of(context)
-                    .username,
+                name: S.of(context).username,
                 validator: (value) {
                   if (_name.isEmpty) {
-                    return S
-                        .of(context)
-                        .usernameValidation;
+                    return S.of(context).usernameValidation;
                   }
                   return null;
                 },
@@ -80,9 +84,7 @@ class _ConnectionPageState extends State<ConnectionPage> {
                 },
               ),
               CustomTextField(
-                name: S
-                    .of(context)
-                    .password,
+                name: S.of(context).password,
                 isPassword: true,
                 validator: (value) {
                   if (value!.isEmpty) {
@@ -96,22 +98,18 @@ class _ConnectionPageState extends State<ConnectionPage> {
               ),
               const SizedBox(height: 20),
               MaterialButton(
-                onPressed: _submitForm,
+                onPressed: btnIsEnable ? _submitForm : null,
                 color: Colors.blue,
                 child: Text(
-                  S
-                      .of(context)
-                      .connection,
+                  S.of(context).connection,
                   style: const TextStyle(color: Colors.white),
                 ),
               ),
               MaterialButton(
-                onPressed: navigateInscription,
+                onPressed: btnIsEnable ? navigateInscription : null,
                 color: Colors.blue,
                 child: Text(
-                  S
-                      .of(context)
-                      .inscription,
+                  S.of(context).inscription,
                   style: const TextStyle(color: Colors.white),
                 ),
               ),

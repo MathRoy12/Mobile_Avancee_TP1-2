@@ -98,7 +98,7 @@ class _HomePageState extends State<HomePage> {
             width: 325,
             child: CachedNetworkImage(
               fit: BoxFit.cover,
-              imageUrl: "http://10.0.2.2:8080/file/${items[index].photoId}",
+              imageUrl: "http://10.0.2.2:8080/file/${items[index].photoId}?width=300",
               placeholder: (context, url) => const Center(
                 child: CircularProgressIndicator(),
               ),

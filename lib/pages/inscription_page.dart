@@ -17,26 +17,45 @@ class InscriptionPage extends StatefulWidget {
 class _InscriptionPageState extends State<InscriptionPage> {
   final _formKey = GlobalKey<FormState>();
 
-  String _name = ''; // Variable to store the entered name
+  String _name = '';
   String _password = '';
   String _confirmPassword = '';
+
+  bool btnIsEnable = true;
 
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+      btnIsEnable = false;
+      setState(() {});
+
       SignupRequest req = SignupRequest();
       req.password = _password;
       req.username = _name;
       try {
-        SigninResponse res = await signup(req);
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const HomePage()));
+        await signup(req);
+        navigateToHome();
       } catch (e) {
-        print(e);
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(S.current.globalError)));
+        btnIsEnable = true;
+        showSnackBar();
+        setState(() {});
       }
     }
+  }
+
+  void showSnackBar() {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(S.current.globalError)));
+  }
+
+  void navigateToHome() {
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const HomePage()));
+  }
+
+  void navigateToConnection() {
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const ConnectionPage()));
   }
 
   @override
@@ -95,7 +114,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
               ),
               const SizedBox(height: 20),
               MaterialButton(
-                onPressed: _submitForm,
+                onPressed: btnIsEnable ? _submitForm : null,
                 color: Colors.blue,
                 child: Text(
                   S.of(context).inscription,
@@ -103,12 +122,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
                 ),
               ),
               MaterialButton(
-                onPressed: () {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const ConnectionPage()));
-                },
+                onPressed: btnIsEnable ? navigateToConnection : null,
                 color: Colors.blue,
                 child: Text(
                   S.of(context).connection,

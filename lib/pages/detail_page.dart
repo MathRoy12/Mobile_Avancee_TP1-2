@@ -21,20 +21,29 @@ class DetailPage extends StatefulWidget {
 class _DetailPageState extends State<DetailPage> {
   XFile? pickedImage;
   String imageURL = "";
+  bool fabIsEnable = true;
+  bool imgBtnIsEnable = true;
 
   int? percentageDone;
 
   getImage() async {
+    imgBtnIsEnable = false;
+    setState(() {});
+
     ImagePicker picker = ImagePicker();
     pickedImage = await picker.pickImage(source: ImageSource.gallery);
     if (pickedImage != null) {
       String res = await saveImage(pickedImage!, widget.id);
       imageURL = 'http://10.0.2.2:8080/file/$res';
     }
+
+    imgBtnIsEnable= true;
     setState(() {});
   }
 
   void save() async {
+    fabIsEnable = false;
+    setState(() {});
     await saveProgress(widget.id, percentageDone!);
     navigateToHome();
   }
@@ -71,7 +80,7 @@ class _DetailPageState extends State<DetailPage> {
             }),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: save,
+        onPressed: fabIsEnable ? save : null,
         child: const Icon(Icons.save),
       ),
     );
@@ -99,7 +108,6 @@ class _DetailPageState extends State<DetailPage> {
               divisions: 100,
               label: '${percentageDone!}',
               onChanged: (value) {
-
                 percentageDone = value.round();
                 setState(() {});
               }),
@@ -126,7 +134,7 @@ class _DetailPageState extends State<DetailPage> {
                 errorWidget: (context, url, error) => const Icon(Icons.error),
               ),
         MaterialButton(
-          onPressed: getImage,
+          onPressed: imgBtnIsEnable ? getImage : null,
           color: Colors.blue,
           child: Text(
             S.of(context).selectImage,
