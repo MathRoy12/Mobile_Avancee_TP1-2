@@ -23,13 +23,13 @@ class _CreationPageState extends State<CreationPage> {
   selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
         context: context, firstDate: DateTime.now(), lastDate: DateTime(2100));
-    if(picked != null && picked!= _deadline){
+    if (picked != null && picked != _deadline) {
       _deadline = picked;
     }
     setState(() {});
   }
 
-  void _submitForm() async{
+  void _submitForm() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
@@ -38,10 +38,13 @@ class _CreationPageState extends State<CreationPage> {
       req.name = _name;
 
       await addTask(req);
-
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const HomePage()));
+      navigateToHome();
     }
+  }
+
+  void navigateToHome() {
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const HomePage()));
   }
 
   @override
@@ -64,33 +67,34 @@ class _CreationPageState extends State<CreationPage> {
 
   Form buildForm(BuildContext context) {
     return Form(
-        key: _formKey,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CustomTextField(
-              name: S.of(context).name,
-              saving: (value) {
-                _name = value!;
-              },
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return S.of(context).nameValidation;
-                }
-                return null;
-              },
+      key: _formKey,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CustomTextField(
+            name: S.of(context).name,
+            saving: (value) {
+              _name = value!;
+            },
+            validator: (value) {
+              if (value!.isEmpty) {
+                return S.of(context).nameValidation;
+              }
+              return null;
+            },
+          ),
+          Text(
+              '${S.of(context).deadline} ${_deadline.year}/${_deadline.month}/${_deadline.day}'),
+          MaterialButton(
+            onPressed: () => selectDate(context),
+            color: Colors.blue,
+            child: Text(
+              S.of(context).selectDeadline,
+              style: const TextStyle(color: Colors.white),
             ),
-          Text('${S.of(context).deadline} ${_deadline.year}/${_deadline.month}/${_deadline.day}'),
-            MaterialButton(
-              onPressed: () => selectDate(context),
-              color: Colors.blue,
-              child: Text(
-                S.of(context).selectDeadline,
-                style: const TextStyle(color: Colors.white),
-              ),
-            ),
-          ],
-        ),
-      );
+          ),
+        ],
+      ),
+    );
   }
 }

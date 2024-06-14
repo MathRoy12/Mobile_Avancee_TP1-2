@@ -19,14 +19,13 @@ class _InscriptionPageState extends State<InscriptionPage> {
 
   String _name = '';
   String _password = '';
-  String _confirmPassword = '';
 
-  bool btnIsEnable = true;
+  bool isLoading = false;
 
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      btnIsEnable = false;
+      isLoading = true;
       setState(() {});
 
       SignupRequest req = SignupRequest();
@@ -36,7 +35,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
         await signup(req);
         navigateToHome();
       } catch (e) {
-        btnIsEnable = true;
+        isLoading = false;
         showSnackBar();
         setState(() {});
       }
@@ -67,72 +66,83 @@ class _InscriptionPageState extends State<InscriptionPage> {
       ),
       body: Container(
         padding: const EdgeInsets.all(10),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CustomTextField(
-                name: S.of(context).username,
-                validator: (value) {
-                  if (_name.isEmpty) {
-                    return S.of(context).usernameValidation;
-                  }
-                  return null;
-                },
-                saving: (value) {
-                  _name = value!;
-                },
-              ),
-              CustomTextField(
-                name: S.of(context).password,
-                isPassword: true,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return S.of(context).passwordValidation;
-                  }
-                  return null;
-                },
-                saving: (value) {
-                  _password = value!;
-                },
-              ),
-              CustomTextField(
-                name: S.of(context).confirmPassword,
-                isPassword: true,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return S.of(context).confirmPasswordValidation;
-                  } else if (value != _password) {
-                    return S.of(context).samePasswordValidation;
-                  }
-                  return null;
-                },
-                saving: (value) {
-                  _confirmPassword = value!;
-                },
-              ),
-              const SizedBox(height: 20),
-              MaterialButton(
-                onPressed: btnIsEnable ? _submitForm : null,
-                color: Colors.blue,
-                child: Text(
-                  S.of(context).inscription,
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ),
-              MaterialButton(
-                onPressed: btnIsEnable ? navigateToConnection : null,
-                color: Colors.blue,
-                child: Text(
-                  S.of(context).connection,
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ),
-            ],
-          ),
-        ),
+        child: buildForm(context),
       ),
+    );
+  }
+
+  Form buildForm(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          buildFormField(context),
+          isLoading ? const LinearProgressIndicator() : const SizedBox(),
+          const SizedBox(height: 20),
+          MaterialButton(
+            onPressed: !isLoading ? _submitForm : null,
+            color: Colors.blue,
+            child: Text(
+              S.of(context).inscription,
+              style: const TextStyle(color: Colors.white),
+            ),
+          ),
+          MaterialButton(
+            onPressed: !isLoading ? navigateToConnection : null,
+            color: Colors.blue,
+            child: Text(
+              S.of(context).connection,
+              style: const TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Column buildFormField(BuildContext context) {
+    return Column(
+      children: [
+        CustomTextField(
+          name: S.of(context).username,
+          validator: (value) {
+            if (_name.isEmpty) {
+              return S.of(context).usernameValidation;
+            }
+            return null;
+          },
+          saving: (value) {
+            _name = value!;
+          },
+        ),
+        CustomTextField(
+          name: S.of(context).password,
+          isPassword: true,
+          validator: (value) {
+            if (value!.isEmpty) {
+              return S.of(context).passwordValidation;
+            }
+            return null;
+          },
+          saving: (value) {
+            _password = value!;
+          },
+        ),
+        CustomTextField(
+          name: S.of(context).confirmPassword,
+          isPassword: true,
+          validator: (value) {
+            if (value!.isEmpty) {
+              return S.of(context).confirmPasswordValidation;
+            } else if (value != _password) {
+              return S.of(context).samePasswordValidation;
+            }
+            return null;
+          },
+          saving: (value) {},
+        ),
+      ],
     );
   }
 }
