@@ -11,6 +11,7 @@
   "deadline": "Deadline",
   "selectDeadline": "Select deadline",
   "detail": "Detail",
+  "selectImage": "Select an image",
   "percentageDoneHome": "{percentage}% done",
   "@percentageDoneHome": {
     "placeholders": {

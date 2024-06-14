@@ -170,6 +170,16 @@ class S {
     );
   }
 
+  /// `Select an image`
+  String get selectImage {
+    return Intl.message(
+      'Select an image',
+      name: 'selectImage',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `{percentage}% done`
   String percentageDoneHome(int percentage) {
     return Intl.message(

@@ -53,6 +53,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Your confirmation isn\'t like your password"),
         "selectDeadline":
             MessageLookupByLibrary.simpleMessage("Select deadline"),
+        "selectImage": MessageLookupByLibrary.simpleMessage("Select an image"),
         "timeElapsed": m1,
         "username": MessageLookupByLibrary.simpleMessage("Username"),
         "usernameValidation":

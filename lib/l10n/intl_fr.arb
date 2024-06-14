@@ -11,6 +11,7 @@
   "deadline": "Échéance",
   "selectDeadline": "Choisissez votre échéance",
   "detail": "Detail",
+  "selectImage": "Sélectionner une image",
   "percentageDoneHome": "{percentage}% d'effectuer",
   "@percentageDoneHome": {
     "placeholders": {

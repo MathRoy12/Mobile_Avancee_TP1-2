@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -20,18 +19,10 @@ class DetailPage extends StatefulWidget {
 }
 
 class _DetailPageState extends State<DetailPage> {
-  TaskDetailPhotoResponse res = TaskDetailPhotoResponse();
   XFile? pickedImage;
   String imageURL = "";
 
-  int percentageDone = 0;
-
-  @override
-  void initState() {
-    super.initState();
-
-    loadDetail();
-  }
+  int? percentageDone;
 
   getImage() async {
     ImagePicker picker = ImagePicker();
@@ -43,18 +34,12 @@ class _DetailPageState extends State<DetailPage> {
     setState(() {});
   }
 
-  void loadDetail() async {
-    res = await getTaskDetail(widget.id);
-    percentageDone = res.percentageDone;
-    if (res.photoId > 0) {
-      imageURL = 'http://10.0.2.2:8080/file/${res.photoId}';
-    }
-    setState(() {});
+  void save() async {
+    await saveProgress(widget.id, percentageDone!);
+    navigateToHome();
   }
 
-  void save() async {
-    await saveProgress(widget.id, percentageDone);
-
+  void navigateToHome() {
     Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const HomePage()));
   }
@@ -68,54 +53,87 @@ class _DetailPageState extends State<DetailPage> {
       ),
       drawer: const MyDrawer(),
       body: Center(
-        child: Container(
-          margin: const EdgeInsets.all(15),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                res.name,
-                style:
-                    const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 20),
-              Text(
-                  "${S.of(context).deadline}: ${DateFormat(S.current.dateFormat).format(res.deadline)} (${res.percentageTimeSpent}%)"),
-              const SizedBox(height: 20),
-              Text(S.of(context).percentageDoneDetail),
-              Slider(
-                  value: percentageDone.toDouble(),
-                  max: 100,
-                  divisions: 100,
-                  label: '$percentageDone',
-                  onChanged: (value) {
-                    percentageDone = value.round();
-                    setState(() {});
-                  }),
-              (imageURL == "")
-                  ? const Icon(
-                      Icons.add,
-                      color: Colors.grey,
-                      size: 70,
-                    )
-                  : Image.network(imageURL),
-              MaterialButton(
-                onPressed: getImage,
-                color: Colors.blue,
-                child: const Text(
-                  "Sélectionner une image",
-                  style: TextStyle(color: Colors.white),
-                ),
-              )
-            ],
-          ),
-        ),
+        child: FutureBuilder<TaskDetailPhotoResponse>(
+            future: getTaskDetail(widget.id),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                TaskDetailPhotoResponse item = snapshot.data!;
+
+                percentageDone ??= item.percentageDone;
+
+                if (item.photoId > 0) {
+                  imageURL = 'http://10.0.2.2:8080/file/${item.photoId}';
+                }
+                return buildBody(item, context);
+              } else {
+                return const CircularProgressIndicator();
+              }
+            }),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: save,
         child: const Icon(Icons.save),
       ),
+    );
+  }
+
+  Container buildBody(TaskDetailPhotoResponse item, BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.all(15),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            item.name,
+            style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 20),
+          Text(
+              "${S.of(context).deadline}: ${DateFormat(S.current.dateFormat).format(item.deadline)} (${item.percentageTimeSpent}%)"),
+          const SizedBox(height: 20),
+          Text(S.of(context).percentageDoneDetail),
+          Slider(
+              value: percentageDone!.toDouble(),
+              max: 100,
+              divisions: 100,
+              label: '${percentageDone!}',
+              onChanged: (value) {
+
+                percentageDone = value.round();
+                setState(() {});
+              }),
+          buildImageSection()
+        ],
+      ),
+    );
+  }
+
+  Column buildImageSection() {
+    return Column(
+      children: [
+        (imageURL == "")
+            ? const Icon(
+                Icons.add,
+                color: Colors.grey,
+                size: 70,
+              )
+            : CachedNetworkImage(
+                imageUrl: imageURL,
+                placeholder: (context, url) => const Center(
+                  child: CircularProgressIndicator(),
+                ),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
+              ),
+        MaterialButton(
+          onPressed: getImage,
+          color: Colors.blue,
+          child: Text(
+            S.of(context).selectImage,
+            style: const TextStyle(color: Colors.white),
+          ),
+        ),
+      ],
     );
   }
 }
