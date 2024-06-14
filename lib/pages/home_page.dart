@@ -69,15 +69,19 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   ListTile(
                     title: Text(items[index].name),
-                    subtitle: Text("Deadline : ${items[index].deadline}"),
+                    subtitle: Text(
+                        "${S.of(context).deadline} : ${DateFormat(S.current.dateFormat).format(items[index].deadline)}"),
                   ),
                   buildImage(items, index),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Text("${items[index].percentageDone}% d'effectuer"),
-                      Text(
-                          "${items[index].percentageTimeSpent}% du temps d'écoulé")
+                      Text(S
+                          .of(context)
+                          .percentageDoneHome(items[index].percentageDone)),
+                      Text(S
+                          .of(context)
+                          .timeElapsed(items[index].percentageTimeSpent))
                     ],
                   ),
                 ],
