@@ -8,6 +8,7 @@ import 'package:mobile_avancee_tp1_2/widgets/my_drawer.dart';
 
 import '../dto/transfer.dart';
 import '../generated/l10n.dart';
+import 'home_page.dart';
 
 class DetailPage extends StatefulWidget {
   const DetailPage({super.key, required this.id});
@@ -54,7 +55,8 @@ class _DetailPageState extends State<DetailPage> {
   void save() async {
     await saveProgress(widget.id, percentageDone);
 
-    Navigator.popUntil(context, (route) => route.isFirst);
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const HomePage()));
   }
 
   @override

@@ -43,6 +43,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   image_picker: ^1.0.8
+  cached_network_image: ^3.0.0
 
 dev_dependencies:
   flutter_test:

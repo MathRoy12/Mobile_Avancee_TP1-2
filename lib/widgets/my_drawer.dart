@@ -19,15 +19,15 @@ class _MyDrawerState extends State<MyDrawer> {
   TextStyle buttonStyle = const TextStyle(fontSize: 20);
 
   void createNew() {
-    Navigator.popUntil(context, (route) => route.isFirst);
-    Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const CreationPage()))
-        .then((value) => Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const HomePage())));
+    Navigator.pop(context);
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const CreationPage()));
   }
 
   void goHome() {
-    Navigator.popUntil(context, (route) => route.isFirst);
+    Navigator.pop(context);
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const HomePage()));
   }
 
   void logout() {

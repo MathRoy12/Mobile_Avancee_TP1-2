@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile_avancee_tp1_2/pages/creation_page.dart';
@@ -16,29 +17,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<HomeItemPhotoResponse> items = [];
-
-  void fillList() async {
-    items = await getTasks();
-    setState(() {});
-  }
-
   void createNew() {
-    Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const CreationPage()))
-        .then((value) => fillList());
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const CreationPage()));
   }
 
   detail(int id) {
-    Navigator.push(context,
-            MaterialPageRoute(builder: (context) => DetailPage(id: id)))
-        .then((value) => fillList());
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    fillList();
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => DetailPage(id: id)));
   }
 
   @override
@@ -50,48 +36,71 @@ class _HomePageState extends State<HomePage> {
       ),
       drawer: const MyDrawer(),
       body: Center(
-        child: ListView.builder(
-            itemCount: items.length,
-            itemBuilder: (context, index) {
-              return MaterialButton(
-                onPressed: () {
-                  detail(items[index].id);
-                },
-                child: Card(
-                  color: Colors.white,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      ListTile(
-                        title: Text(items[index].name),
-                        subtitle: Text(
-                            "${S.of(context).deadline} : ${DateFormat(S.current.dateFormat).format(items[index].deadline)}"),
-                      ),
-                      (items[index].photoId > 0)
-                          ? Image.network(
-                              "http://10.0.2.2:8080/file/${items[index].photoId}")
-                          : const SizedBox(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text(S
-                              .of(context)
-                              .percentageDoneHome(items[index].percentageDone)),
-                          Text(S
-                              .of(context)
-                              .timeElapsed(items[index].percentageTimeSpent))
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }),
+        child: FutureBuilder<List<HomeItemPhotoResponse>>(
+          future: getTasks(),
+          builder: (context, lst) {
+            if (lst.hasData) {
+              return buildListView(lst.data!);
+            } else {
+              return const CircularProgressIndicator();
+            }
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: createNew,
         child: const Icon(Icons.add),
       ),
     );
+  }
+
+  ListView buildListView(List<HomeItemPhotoResponse> items) {
+    return ListView.builder(
+        itemCount: items.length,
+        itemBuilder: (context, index) {
+          return MaterialButton(
+            onPressed: () {
+              detail(items[index].id);
+            },
+            child: Card(
+              color: Colors.white,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ListTile(
+                    title: Text(items[index].name),
+                    subtitle: Text("Deadline : ${items[index].deadline}"),
+                  ),
+                  buildImage(items, index),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text("${items[index].percentageDone}% d'effectuer"),
+                      Text(
+                          "${items[index].percentageTimeSpent}% du temps d'écoulé")
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  SizedBox buildImage(List<HomeItemPhotoResponse> items, int index) {
+    return (items[index].photoId > 0)
+        ? SizedBox(
+            height: 200,
+            width: 325,
+            child: CachedNetworkImage(
+              fit: BoxFit.cover,
+              imageUrl: "http://10.0.2.2:8080/file/${items[index].photoId}",
+              placeholder: (context, url) => const Center(
+                child: CircularProgressIndicator(),
+              ),
+              errorWidget: (context, url, error) => Icon(Icons.error),
+            ),
+          )
+        : const SizedBox();
   }
 }

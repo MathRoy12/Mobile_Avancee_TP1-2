@@ -5,6 +5,7 @@ import 'package:mobile_avancee_tp1_2/widgets/my_drawer.dart';
 
 import '../dto/transfer.dart';
 import '../generated/l10n.dart';
+import 'home_page.dart';
 
 class CreationPage extends StatefulWidget {
   const CreationPage({super.key});
@@ -38,7 +39,8 @@ class _CreationPageState extends State<CreationPage> {
 
       await addTask(req);
 
-      Navigator.popUntil(context, (route) => route.isFirst);
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const HomePage()));
     }
   }
 
@@ -51,40 +53,44 @@ class _CreationPageState extends State<CreationPage> {
       ),
       drawer: const MyDrawer(),
       body: Center(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CustomTextField(
-                name: S.of(context).name,
-                saving: (value) {
-                  _name = value!;
-                },
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return S.of(context).nameValidation;
-                  }
-                  return null;
-                },
-              ),
-            Text('${S.of(context).deadline} ${_deadline.year}/${_deadline.month}/${_deadline.day}'),
-              MaterialButton(
-                onPressed: () => selectDate(context),
-                color: Colors.blue,
-                child: Text(
-                  S.of(context).selectDeadline,
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ),
-            ],
-          ),
-        ),
+        child: buildForm(context),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _submitForm,
         child: const Icon(Icons.save),
       ),
     );
+  }
+
+  Form buildForm(BuildContext context) {
+    return Form(
+        key: _formKey,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CustomTextField(
+              name: S.of(context).name,
+              saving: (value) {
+                _name = value!;
+              },
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return S.of(context).nameValidation;
+                }
+                return null;
+              },
+            ),
+          Text('${S.of(context).deadline} ${_deadline.year}/${_deadline.month}/${_deadline.day}'),
+            MaterialButton(
+              onPressed: () => selectDate(context),
+              color: Colors.blue,
+              child: Text(
+                S.of(context).selectDeadline,
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        ),
+      );
   }
 }
