@@ -59,7 +59,7 @@ Future<String> saveProgress(int id, int progressValue) async {
 }
 
 Future<String> signout() async {
-  var response = await SingletonDio.getDio().get('${url}api/id/signout');
+  var response = await SingletonDio.getDio().post('${url}api/id/signout');
   usernameService.username = '';
   return response.data;
 }
