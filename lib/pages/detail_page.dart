@@ -21,8 +21,8 @@ class DetailPage extends StatefulWidget {
 class _DetailPageState extends State<DetailPage> {
   XFile? pickedImage;
   String imageURL = "";
-  bool fabIsEnable = true;
   bool imgBtnIsEnable = true;
+  bool isSaving = false;
 
   int? percentageDone;
 
@@ -42,9 +42,11 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   void save() async {
-    fabIsEnable = false;
+    isSaving = true;
     setState(() {});
     await saveProgress(widget.id, percentageDone!);
+    isSaving = false;
+    setState(() {});
     navigateToHome();
   }
 
@@ -80,7 +82,7 @@ class _DetailPageState extends State<DetailPage> {
             }),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: fabIsEnable ? save : null,
+        onPressed: !isSaving ? save : null,
         child: const Icon(Icons.save),
       ),
     );
@@ -111,7 +113,8 @@ class _DetailPageState extends State<DetailPage> {
                 percentageDone = value.round();
                 setState(() {});
               }),
-          buildImageSection()
+          buildImageSection(),
+          isSaving ? const LinearProgressIndicator() : const SizedBox(),
         ],
       ),
     );

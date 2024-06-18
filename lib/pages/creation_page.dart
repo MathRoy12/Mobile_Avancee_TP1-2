@@ -16,6 +16,7 @@ class CreationPage extends StatefulWidget {
 
 class _CreationPageState extends State<CreationPage> {
   final _formKey = GlobalKey<FormState>();
+  bool isLoading = false;
 
   String _name = '';
   DateTime _deadline = DateTime.now();
@@ -32,12 +33,16 @@ class _CreationPageState extends State<CreationPage> {
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+      isLoading = true;
+      setState(() {});
 
       AddTaskRequest req = AddTaskRequest();
       req.deadline = _deadline;
       req.name = _name;
 
       await addTask(req);
+      isLoading = false;
+      setState(() {});
       navigateToHome();
     }
   }
@@ -56,7 +61,13 @@ class _CreationPageState extends State<CreationPage> {
       ),
       drawer: const MyDrawer(),
       body: Center(
-        child: buildForm(context),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            buildForm(context),
+            isLoading ? const LinearProgressIndicator() : const SizedBox(),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _submitForm,
