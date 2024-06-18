@@ -1,7 +1,9 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_avancee_tp1_2/pages/inscription_page.dart';
 
 import '../dto/transfer.dart';
+import '../generated/l10n.dart';
 import '../services/http_service.dart';
 import '../widgets/custom_text_field.dart';
 import 'home_page.dart';
@@ -19,25 +21,39 @@ class _ConnectionPageState extends State<ConnectionPage> {
   String _name = '';
   String _password = '';
 
-  void _submitForm() async{
+  bool isLoading = false;
+
+  void _submitForm() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+      isLoading = true;
+      setState(() {});
+
       SigninRequest req = SigninRequest();
       req.password = _password;
       req.username = _name;
-      try{
-        SigninResponse res = await signin(req);
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-                builder: (context) => const HomePage()));
-      }
-      catch(e){
-        print(e);
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('Il y a eux une Erreur')));
-        return;
+      try {
+        await signin(req);
+        navigateToHome();
+      } on DioException catch (e) {
+        if (e.response?.data == "InternalAuthenticationServiceException") {
+          showSnackBar(S.current.badCredentials);
+        } else {
+          showSnackBar(S.current.globalError);
+        }
+        isLoading = false;
+        setState(() {});
       }
     }
+  }
+
+  void showSnackBar(String text) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
+  }
+
+  void navigateToHome() {
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const HomePage()));
   }
 
   navigateInscription() {
@@ -50,61 +66,115 @@ class _ConnectionPageState extends State<ConnectionPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text("Connection"),
+        title: Text(S.of(context).connection),
       ),
       body: Container(
         padding: const EdgeInsets.all(10),
-        child: Form(
-          key: _formKey,
-          child: Column(
+        child: buildForm(context),
+      ),
+    );
+  }
+
+  Form buildForm(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: OrientationBuilder(builder: (context, orientation) {
+        if (orientation == Orientation.portrait) {
+          return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CustomTextField(
-                name: 'Username',
-                validator: (value) {
-                  if (_name.isEmpty) {
-                    return "Vous devez entrez un nom d'utilisateur";
-                  }
-                  return null;
-                },
-                saving: (value) {
-                  _name = value!;
-                },
-              ),
-              CustomTextField(
-                name: 'Password',
-                isPassword: true,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return "Veuillez écrire votre mot de passe";
-                  }
-                  return null;
-                },
-                saving: (value) {
-                  _password = value!;
-                },
-              ),
+              buildFormField(context),
+              isLoading ? const LinearProgressIndicator() : const SizedBox(),
               const SizedBox(height: 20),
-              MaterialButton(
-                onPressed: _submitForm,
-                color: Colors.blue,
-                child: const Text(
-                  'Connexion',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-              MaterialButton(
-                onPressed: navigateInscription,
-                color: Colors.blue,
-                child: const Text(
-                  'Inscription',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
+              buildButtons(context),
             ],
-          ),
+          );
+        } else {
+          return buildLandscapeLayout(context);
+        }
+      }),
+    );
+  }
+
+  Center buildLandscapeLayout(BuildContext context) {
+    return Center(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      buildFormField(context),
+                    ],
+                  ),
+                ),
+                Expanded(child: buildButtons(context)),
+              ],
+            ),
+            isLoading ? const LinearProgressIndicator() : const SizedBox(),
+          ],
         ),
       ),
+    );
+  }
+
+  Column buildButtons(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        MaterialButton(
+          onPressed: !isLoading ? _submitForm : null,
+          color: Colors.blue,
+          child: Text(
+            S.of(context).connection,
+            style: const TextStyle(color: Colors.white),
+          ),
+        ),
+        MaterialButton(
+          onPressed: !isLoading ? navigateInscription : null,
+          color: Colors.blue,
+          child: Text(
+            S.of(context).inscription,
+            style: const TextStyle(color: Colors.white),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Column buildFormField(BuildContext context) {
+    return Column(
+      children: [
+        CustomTextField(
+          name: S.of(context).username,
+          validator: (value) {
+            if (_name.isEmpty) {
+              return S.of(context).usernameValidation;
+            }
+            return null;
+          },
+          saving: (value) {
+            _name = value!;
+          },
+        ),
+        CustomTextField(
+          name: S.of(context).password,
+          isPassword: true,
+          validator: (value) {
+            if (value!.isEmpty) {
+              return S.of(context).passwordValidation;
+            }
+            return null;
+          },
+          saving: (value) {
+            _password = value!;
+          },
+        ),
+      ],
     );
   }
 }

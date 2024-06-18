@@ -1,9 +1,11 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_avancee_tp1_2/pages/connection_page.dart';
 import 'package:mobile_avancee_tp1_2/pages/home_page.dart';
 import 'package:mobile_avancee_tp1_2/services/http_service.dart';
 
 import '../dto/transfer.dart';
+import '../generated/l10n.dart';
 import '../widgets/custom_text_field.dart';
 
 class InscriptionPage extends StatefulWidget {
@@ -16,28 +18,52 @@ class InscriptionPage extends StatefulWidget {
 class _InscriptionPageState extends State<InscriptionPage> {
   final _formKey = GlobalKey<FormState>();
 
-  String _name = ''; // Variable to store the entered name
+  String _name = '';
   String _password = '';
-  String _confirmPassword = '';
+
+  bool isLoading = false;
 
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+      isLoading = true;
+      setState(() {});
+
       SignupRequest req = SignupRequest();
       req.password = _password;
       req.username = _name;
-      try{
-        SigninResponse res = await signup(req);
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-                builder: (context) => const HomePage()));
-      }
-      catch(e){
-        print(e);
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('Il y a eux une Erreur')));
+      try {
+        await signup(req);
+        navigateToHome();
+      } on DioException catch (e) {
+        switch (e.response?.data) {
+          case "UsernameTooShort":
+            showSnackBar(S.current.usernameTooShort);
+          case "PasswordTooShort":
+            showSnackBar(S.current.passwordTooShort);
+          case "UsernameAlreadyTaken":
+            showSnackBar(S.current.usernameAlreadyTaken);
+          default:
+            showSnackBar(S.current.globalError);
+        }
+        isLoading = false;
+        setState(() {});
       }
     }
+  }
+
+  void showSnackBar(String text) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
+  }
+
+  void navigateToHome() {
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const HomePage()));
+  }
+
+  void navigateToConnection() {
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const ConnectionPage()));
   }
 
   @override
@@ -45,82 +71,87 @@ class _InscriptionPageState extends State<InscriptionPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text("Inscription"),
+        title: Text(S.of(context).inscription),
       ),
       body: Container(
         padding: const EdgeInsets.all(10),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CustomTextField(
-                name: 'Username',
-                validator: (value) {
-                  if (_name.isEmpty) {
-                    return "Vous devez entrez un nom d'utilisateur";
-                  }
-                  return null;
-                },
-                saving: (value) {
-                  _name = value!;
-                },
-              ),
-              CustomTextField(
-                name: 'Password',
-                isPassword: true,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return "Veuillez écrire votre mot de passe";
-                  }
-                  return null;
-                },
-                saving: (value) {
-                  _password = value!;
-                },
-              ),
-              CustomTextField(
-                name: 'Confirm password',
-                isPassword: true,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return "Veuillez confirmé votre mot de passe";
-                  }
-                  else if(value != _password){
-                    return "Votre confirmation n'est pas comme votre mot de passe";
-                  }
-                  return null;
-                },
-                saving: (value) {
-                  _confirmPassword = value!;
-                },
-              ),
-              const SizedBox(height: 20),
-              MaterialButton(
-                onPressed: _submitForm,
-                color: Colors.blue,
-                child: const Text(
-                  'Inscription',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-              MaterialButton(
-                onPressed: () {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const ConnectionPage()));
-                },
-                color: Colors.blue,
-                child: const Text(
-                  'Connection',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            ],
-          ),
-        ),
+        child: buildForm(context),
       ),
+    );
+  }
+
+  Form buildForm(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          buildFormField(context),
+          isLoading ? const LinearProgressIndicator() : const SizedBox(),
+          const SizedBox(height: 20),
+          MaterialButton(
+            onPressed: !isLoading ? _submitForm : null,
+            color: Colors.blue,
+            child: Text(
+              S.of(context).inscription,
+              style: const TextStyle(color: Colors.white),
+            ),
+          ),
+          MaterialButton(
+            onPressed: !isLoading ? navigateToConnection : null,
+            color: Colors.blue,
+            child: Text(
+              S.of(context).connection,
+              style: const TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Column buildFormField(BuildContext context) {
+    return Column(
+      children: [
+        CustomTextField(
+          name: S.of(context).username,
+          validator: (value) {
+            if (_name.isEmpty) {
+              return S.of(context).usernameValidation;
+            }
+            return null;
+          },
+          saving: (value) {
+            _name = value!;
+          },
+        ),
+        CustomTextField(
+          name: S.of(context).password,
+          isPassword: true,
+          validator: (value) {
+            if (value!.isEmpty) {
+              return S.of(context).passwordValidation;
+            }
+            return null;
+          },
+          saving: (value) {
+            _password = value!;
+          },
+        ),
+        CustomTextField(
+          name: S.of(context).confirmPassword,
+          isPassword: true,
+          validator: (value) {
+            if (value!.isEmpty) {
+              return S.of(context).confirmPasswordValidation;
+            } else if (value != _password) {
+              return S.of(context).samePasswordValidation;
+            }
+            return null;
+          },
+          saving: (value) {},
+        ),
+      ],
     );
   }
 }

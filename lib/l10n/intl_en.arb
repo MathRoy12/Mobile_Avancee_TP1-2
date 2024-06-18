@@ -1,0 +1,44 @@
+{
+  "username": "Username",
+  "password": "Password",
+  "confirmPassword": "Confirm password",
+  "connection": "Connection",
+  "inscription": "Inscription",
+  "home": "Home",
+  "newTask": "New task",
+  "logout": "Log out",
+  "name": "name",
+  "deadline": "Deadline",
+  "selectDeadline": "Select deadline",
+  "detail": "Detail",
+  "selectImage": "Select an image",
+  "percentageDoneHome": "{percentage}% done",
+  "@percentageDoneHome": {
+    "placeholders": {
+      "percentage": {
+        "type": "int"
+      }
+    }
+  },
+  "percentageDoneDetail": "Percentage done:",
+  "timeElapsed": "{percentage}% of time elapsed",
+  "@timeElapsed": {
+    "placeholders": {
+      "percentage": {
+        "type": "double"
+      }
+    }
+  },
+  "usernameValidation": "You need to enter a username",
+  "passwordValidation": "You need to enter a password",
+  "confirmPasswordValidation": "You need to confirm your password",
+  "samePasswordValidation": "Your confirmation isn't like your password",
+  "nameValidation": "The task need a name",
+  "globalError": "An error as occurred",
+  "dateFormat": "MMMM dd y",
+  "badCredentials" : "Your password or username is wrong",
+  "taskNotFound" : "La tâche n'a pas été trouvé",
+  "usernameTooShort" : "Your username is too short",
+  "passwordTooShort" : "your password is too short",
+  "usernameAlreadyTaken" : "this username is already taken"
+}

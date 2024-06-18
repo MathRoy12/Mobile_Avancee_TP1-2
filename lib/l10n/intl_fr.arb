@@ -1,0 +1,44 @@
+{
+  "username": "Nom d'utilisateur",
+  "password": "Mot de passe",
+  "confirmPassword": "Confirmez votre mot de passe",
+  "Connection": "Connexion",
+  "inscription": "Inscription",
+  "home": "Accueil",
+  "newTask": "Nouvelle tâche",
+  "logout": "Déconnexion",
+  "name": "nom",
+  "deadline": "Échéance",
+  "selectDeadline": "Choisissez votre échéance",
+  "detail": "Detail",
+  "selectImage": "Sélectionner une image",
+  "percentageDoneHome": "{percentage}% d'effectuer",
+  "@percentageDoneHome": {
+    "placeholders": {
+      "percentage": {
+        "type": "int"
+      }
+    }
+  },
+  "percentageDoneDetail": "Pourcentage effectué:",
+  "timeElapsed": "{percentage}% du temps d'écoulé",
+  "@timeElapsed": {
+    "placeholders": {
+      "percentage": {
+        "type": "double"
+      }
+    }
+  },
+  "usernameValidation": "Vous devez entrez un nom d'utilisateur",
+  "passwordValidation": "Veuillez écrire votre mot de passe",
+  "confirmPasswordValidation": "Veuillez confirmé votre mot de passe",
+  "samePasswordValidation": "Votre confirmation n'est pas comme votre mot de passe",
+  "nameValidation": "La tache doit avoir un nom",
+  "globalError": "Une erreur c'est produite",
+  "dateFormat": "dd MMMM y",
+  "badCredentials" : "Votre nom d'utilisateur ou votre mot de passe est mauvais",
+  "taskNotFound" : "The taks wasn't found",
+  "usernameTooShort" : "Votre nom d'utilisateur est trop court",
+  "passwordTooShort" : "Votre mot de passe est trop court",
+  "usernameAlreadyTaken" : "Ce nom d'utilisateur est déjà pris"
+}

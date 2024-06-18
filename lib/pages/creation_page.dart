@@ -1,10 +1,12 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile_avancee_tp1_2/pages/home_page.dart';
 import 'package:mobile_avancee_tp1_2/services/http_service.dart';
 import 'package:mobile_avancee_tp1_2/widgets/custom_text_field.dart';
 import 'package:mobile_avancee_tp1_2/widgets/my_drawer.dart';
 
 import '../dto/transfer.dart';
+import '../generated/l10n.dart';
+import 'home_page.dart';
 
 class CreationPage extends StatefulWidget {
   const CreationPage({super.key});
@@ -15,6 +17,7 @@ class CreationPage extends StatefulWidget {
 
 class _CreationPageState extends State<CreationPage> {
   final _formKey = GlobalKey<FormState>();
+  bool isLoading = false;
 
   String _name = '';
   DateTime _deadline = DateTime.now();
@@ -22,24 +25,41 @@ class _CreationPageState extends State<CreationPage> {
   selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
         context: context, firstDate: DateTime.now(), lastDate: DateTime(2100));
-    if(picked != null && picked!= _deadline){
+    if (picked != null && picked != _deadline) {
       _deadline = picked;
     }
     setState(() {});
   }
 
-  void _submitForm() async{
+  void _submitForm() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+      isLoading = true;
+      setState(() {});
 
       AddTaskRequest req = AddTaskRequest();
       req.deadline = _deadline;
       req.name = _name;
 
-      await addTask(req);
-
-      Navigator.popUntil(context, (route) => route.isFirst);
+      try{
+        await addTask(req);
+        navigateToHome();
+      }
+      on DioException{
+        showSnackBar(S.current.globalError);
+        isLoading = false;
+        setState(() {});
+      }
     }
+  }
+
+  void showSnackBar(String text) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
+  }
+
+  void navigateToHome() {
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const HomePage()));
   }
 
   @override
@@ -47,36 +67,16 @@ class _CreationPageState extends State<CreationPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('New Task'),
+        title: Text(S.of(context).newTask),
       ),
       drawer: const MyDrawer(),
       body: Center(
-        child: Form(
-          key: _formKey,
+        child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CustomTextField(
-                name: 'name',
-                saving: (value) {
-                  _name = value!;
-                },
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return "La tache doit avoir un nom";
-                  }
-                  return null;
-                },
-              ),
-            Text('DeadLine: ${_deadline.year}/${_deadline.month}/${_deadline.day}'),
-              MaterialButton(
-                onPressed: () => selectDate(context),
-                color: Colors.blue,
-                child: const Text(
-                  "Select deadline",
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
+              buildForm(context),
+              isLoading ? const LinearProgressIndicator() : const SizedBox(),
             ],
           ),
         ),
@@ -84,6 +84,39 @@ class _CreationPageState extends State<CreationPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: _submitForm,
         child: const Icon(Icons.save),
+      ),
+    );
+  }
+
+  Form buildForm(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CustomTextField(
+            name: S.of(context).name,
+            saving: (value) {
+              _name = value!;
+            },
+            validator: (value) {
+              if (value!.isEmpty) {
+                return S.of(context).nameValidation;
+              }
+              return null;
+            },
+          ),
+          Text(
+              '${S.of(context).deadline} ${_deadline.year}/${_deadline.month}/${_deadline.day}'),
+          MaterialButton(
+            onPressed: () => selectDate(context),
+            color: Colors.blue,
+            child: Text(
+              S.of(context).selectDeadline,
+              style: const TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
       ),
     );
   }
