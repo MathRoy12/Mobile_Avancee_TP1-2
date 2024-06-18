@@ -37,8 +37,7 @@ class _ConnectionPageState extends State<ConnectionPage> {
         navigateToHome();
       } on DioException catch (e) {
         if (e.response?.data == "InternalAuthenticationServiceException") {
-          showSnackBar(
-              S.current.badCredentials);
+          showSnackBar(S.current.badCredentials);
         } else {
           showSnackBar(S.current.globalError);
         }
@@ -79,30 +78,71 @@ class _ConnectionPageState extends State<ConnectionPage> {
   Form buildForm(BuildContext context) {
     return Form(
       key: _formKey,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          buildFormField(context),
-          isLoading ? const LinearProgressIndicator() : const SizedBox(),
-          const SizedBox(height: 20),
-          MaterialButton(
-            onPressed: !isLoading ? _submitForm : null,
-            color: Colors.blue,
-            child: Text(
-              S.of(context).connection,
-              style: const TextStyle(color: Colors.white),
+      child: OrientationBuilder(builder: (context, orientation) {
+        if (orientation == Orientation.portrait) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              buildFormField(context),
+              isLoading ? const LinearProgressIndicator() : const SizedBox(),
+              const SizedBox(height: 20),
+              buildButtons(context),
+            ],
+          );
+        } else {
+          return buildLandscapeLayout(context);
+        }
+      }),
+    );
+  }
+
+  Center buildLandscapeLayout(BuildContext context) {
+    return Center(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      buildFormField(context),
+                    ],
+                  ),
+                ),
+                Expanded(child: buildButtons(context)),
+              ],
             ),
-          ),
-          MaterialButton(
-            onPressed: !isLoading ? navigateInscription : null,
-            color: Colors.blue,
-            child: Text(
-              S.of(context).inscription,
-              style: const TextStyle(color: Colors.white),
-            ),
-          ),
-        ],
+            isLoading ? const LinearProgressIndicator() : const SizedBox(),
+          ],
+        ),
       ),
+    );
+  }
+
+  Column buildButtons(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        MaterialButton(
+          onPressed: !isLoading ? _submitForm : null,
+          color: Colors.blue,
+          child: Text(
+            S.of(context).connection,
+            style: const TextStyle(color: Colors.white),
+          ),
+        ),
+        MaterialButton(
+          onPressed: !isLoading ? navigateInscription : null,
+          color: Colors.blue,
+          child: Text(
+            S.of(context).inscription,
+            style: const TextStyle(color: Colors.white),
+          ),
+        ),
+      ],
     );
   }
 

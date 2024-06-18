@@ -86,22 +86,24 @@ class _DetailPageState extends State<DetailPage> {
       ),
       drawer: const MyDrawer(),
       body: Center(
-        child: FutureBuilder<TaskDetailPhotoResponse>(
-            future: getDetail(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                TaskDetailPhotoResponse item = snapshot.data!;
-
-                percentageDone ??= item.percentageDone;
-
-                if (item.photoId > 0) {
-                  imageURL = 'http://10.0.2.2:8080/file/${item.photoId}';
+        child: SingleChildScrollView(
+          child: FutureBuilder<TaskDetailPhotoResponse>(
+              future: getDetail(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  TaskDetailPhotoResponse item = snapshot.data!;
+          
+                  percentageDone ??= item.percentageDone;
+          
+                  if (item.photoId > 0) {
+                    imageURL = 'http://10.0.2.2:8080/file/${item.photoId}';
+                  }
+                  return buildBody(item, context);
+                } else {
+                  return const CircularProgressIndicator();
                 }
-                return buildBody(item, context);
-              } else {
-                return const CircularProgressIndicator();
-              }
-            }),
+              }),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: !isSaving && isFabEnable ? save : null,

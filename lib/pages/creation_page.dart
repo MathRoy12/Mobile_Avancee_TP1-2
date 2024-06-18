@@ -71,12 +71,14 @@ class _CreationPageState extends State<CreationPage> {
       ),
       drawer: const MyDrawer(),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            buildForm(context),
-            isLoading ? const LinearProgressIndicator() : const SizedBox(),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              buildForm(context),
+              isLoading ? const LinearProgressIndicator() : const SizedBox(),
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
