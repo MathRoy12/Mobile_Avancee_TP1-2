@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -21,6 +22,7 @@ class DetailPage extends StatefulWidget {
 class _DetailPageState extends State<DetailPage> {
   XFile? pickedImage;
   String imageURL = "";
+  bool isFabEnable = true;
   bool imgBtnIsEnable = true;
   bool isSaving = false;
 
@@ -37,22 +39,42 @@ class _DetailPageState extends State<DetailPage> {
       imageURL = 'http://10.0.2.2:8080/file/$res';
     }
 
-    imgBtnIsEnable= true;
+    imgBtnIsEnable = true;
     setState(() {});
   }
 
   void save() async {
     isSaving = true;
     setState(() {});
-    await saveProgress(widget.id, percentageDone!);
-    isSaving = false;
-    setState(() {});
-    navigateToHome();
+    try {
+      await saveProgress(widget.id, percentageDone!);
+      navigateToHome();
+    } on DioException {
+      isSaving = false;
+      setState(() {});
+      showSnackBar(S.current.globalError);
+    }
   }
 
   void navigateToHome() {
     Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const HomePage()));
+  }
+
+  Future<TaskDetailPhotoResponse> getDetail() async {
+    try {
+      return await getTaskDetail(widget.id);
+    } on DioException {
+      showSnackBar("La tâche n'a pas été trouvé");
+      isFabEnable = false;
+      imgBtnIsEnable = false;
+      return TaskDetailPhotoResponse();
+    }
+  }
+
+  void showSnackBar(String text) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(text)));
   }
 
   @override
@@ -65,7 +87,7 @@ class _DetailPageState extends State<DetailPage> {
       drawer: const MyDrawer(),
       body: Center(
         child: FutureBuilder<TaskDetailPhotoResponse>(
-            future: getTaskDetail(widget.id),
+            future: getDetail(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 TaskDetailPhotoResponse item = snapshot.data!;
@@ -82,7 +104,7 @@ class _DetailPageState extends State<DetailPage> {
             }),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: !isSaving ? save : null,
+        onPressed: !isSaving && isFabEnable ? save : null,
         child: const Icon(Icons.save),
       ),
     );

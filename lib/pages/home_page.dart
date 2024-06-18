@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile_avancee_tp1_2/pages/creation_page.dart';
@@ -27,6 +28,16 @@ class _HomePageState extends State<HomePage> {
         context, MaterialPageRoute(builder: (context) => DetailPage(id: id)));
   }
 
+  Future<List<HomeItemPhotoResponse>> fillList() async {
+    try {
+      return await getTasks();
+    } on DioException {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(S.of(context).globalError)));
+    }
+    return [];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +48,7 @@ class _HomePageState extends State<HomePage> {
       drawer: const MyDrawer(),
       body: Center(
         child: FutureBuilder<List<HomeItemPhotoResponse>>(
-          future: getTasks(),
+          future: fillList(),
           builder: (context, lst) {
             if (lst.hasData) {
               return buildListView(lst.data!);
@@ -98,7 +109,8 @@ class _HomePageState extends State<HomePage> {
             width: 325,
             child: CachedNetworkImage(
               fit: BoxFit.cover,
-              imageUrl: "http://10.0.2.2:8080/file/${items[index].photoId}?width=300",
+              imageUrl:
+                  "http://10.0.2.2:8080/file/${items[index].photoId}?width=300",
               placeholder: (context, url) => const Center(
                 child: CircularProgressIndicator(),
               ),

@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_avancee_tp1_2/services/http_service.dart';
 import 'package:mobile_avancee_tp1_2/widgets/custom_text_field.dart';
@@ -40,11 +41,20 @@ class _CreationPageState extends State<CreationPage> {
       req.deadline = _deadline;
       req.name = _name;
 
-      await addTask(req);
-      isLoading = false;
-      setState(() {});
-      navigateToHome();
+      try{
+        await addTask(req);
+        navigateToHome();
+      }
+      on DioException{
+        showSnackBar(S.current.globalError);
+        isLoading = false;
+        setState(() {});
+      }
     }
+  }
+
+  void showSnackBar(String text) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
   }
 
   void navigateToHome() {

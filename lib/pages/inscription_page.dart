@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_avancee_tp1_2/pages/connection_page.dart';
 import 'package:mobile_avancee_tp1_2/pages/home_page.dart';
@@ -34,17 +35,25 @@ class _InscriptionPageState extends State<InscriptionPage> {
       try {
         await signup(req);
         navigateToHome();
-      } catch (e) {
+      } on DioException catch (e) {
+        switch (e.response?.data) {
+          case "UsernameTooShort":
+            showSnackBar("Votre nom d'utilisateur est trop court");
+          case "PasswordTooShort":
+            showSnackBar("Votre mot de passe est trop court");
+          case "UsernameAlreadyTaken":
+            showSnackBar("Ce nom d'utilisateur est déjà pris");
+          default:
+            showSnackBar(S.current.globalError);
+        }
         isLoading = false;
-        showSnackBar();
         setState(() {});
       }
     }
   }
 
-  void showSnackBar() {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(S.current.globalError)));
+  void showSnackBar(String text) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
   }
 
   void navigateToHome() {

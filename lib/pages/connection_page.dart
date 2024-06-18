@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_avancee_tp1_2/pages/inscription_page.dart';
 
@@ -34,17 +35,21 @@ class _ConnectionPageState extends State<ConnectionPage> {
       try {
         await signin(req);
         navigateToHome();
-      } catch (e) {
+      } on DioException catch (e) {
+        if (e.response?.data == "InternalAuthenticationServiceException") {
+          showSnackBar(
+              "Votre nom d'utilisateur ou votre mot de passe est mauvais");
+        } else {
+          showSnackBar(S.current.globalError);
+        }
         isLoading = false;
-        showSnackBar();
         setState(() {});
       }
     }
   }
 
-  void showSnackBar() {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(S.current.globalError)));
+  void showSnackBar(String text) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
   }
 
   void navigateToHome() {
