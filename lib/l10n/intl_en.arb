@@ -35,5 +35,10 @@
   "samePasswordValidation": "Your confirmation isn't like your password",
   "nameValidation": "The task need a name",
   "globalError": "An error as occurred",
-  "dateFormat": "MMMM dd y"
+  "dateFormat": "MMMM dd y",
+  "badCredentials" : "Your password or username is wrong",
+  "taskNotFound" : "La tâche n'a pas été trouvé",
+  "usernameTooShort" : "Your username is too short",
+  "passwordTooShort" : "your password is too short",
+  "usernameAlreadyTaken" : "this username is already taken"
 }

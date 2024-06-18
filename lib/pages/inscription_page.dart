@@ -38,11 +38,11 @@ class _InscriptionPageState extends State<InscriptionPage> {
       } on DioException catch (e) {
         switch (e.response?.data) {
           case "UsernameTooShort":
-            showSnackBar("Votre nom d'utilisateur est trop court");
+            showSnackBar(S.current.usernameTooShort);
           case "PasswordTooShort":
-            showSnackBar("Votre mot de passe est trop court");
+            showSnackBar(S.current.passwordTooShort);
           case "UsernameAlreadyTaken":
-            showSnackBar("Ce nom d'utilisateur est déjà pris");
+            showSnackBar(S.current.usernameAlreadyTaken);
           default:
             showSnackBar(S.current.globalError);
         }

@@ -35,5 +35,10 @@
   "samePasswordValidation": "Votre confirmation n'est pas comme votre mot de passe",
   "nameValidation": "La tache doit avoir un nom",
   "globalError": "Une erreur c'est produite",
-  "dateFormat": "dd MMMM y"
+  "dateFormat": "dd MMMM y",
+  "badCredentials" : "Votre nom d'utilisateur ou votre mot de passe est mauvais",
+  "taskNotFound" : "The taks wasn't found",
+  "usernameTooShort" : "Votre nom d'utilisateur est trop court",
+  "passwordTooShort" : "Votre mot de passe est trop court",
+  "usernameAlreadyTaken" : "Ce nom d'utilisateur est déjà pris"
 }

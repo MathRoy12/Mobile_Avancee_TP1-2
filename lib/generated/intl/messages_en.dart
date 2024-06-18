@@ -26,6 +26,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "badCredentials": MessageLookupByLibrary.simpleMessage(
+            "Your password or username is wrong"),
         "confirmPassword":
             MessageLookupByLibrary.simpleMessage("Confirm password"),
         "confirmPasswordValidation": MessageLookupByLibrary.simpleMessage(
@@ -44,6 +46,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("The task need a name"),
         "newTask": MessageLookupByLibrary.simpleMessage("New task"),
         "password": MessageLookupByLibrary.simpleMessage("Password"),
+        "passwordTooShort":
+            MessageLookupByLibrary.simpleMessage("your password is too short"),
         "passwordValidation": MessageLookupByLibrary.simpleMessage(
             "You need to enter a password"),
         "percentageDoneDetail":
@@ -54,8 +58,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "selectDeadline":
             MessageLookupByLibrary.simpleMessage("Select deadline"),
         "selectImage": MessageLookupByLibrary.simpleMessage("Select an image"),
+        "taskNotFound": MessageLookupByLibrary.simpleMessage(
+            "La tâche n\'a pas été trouvé"),
         "timeElapsed": m1,
         "username": MessageLookupByLibrary.simpleMessage("Username"),
+        "usernameAlreadyTaken": MessageLookupByLibrary.simpleMessage(
+            "this username is already taken"),
+        "usernameTooShort":
+            MessageLookupByLibrary.simpleMessage("Your username is too short"),
         "usernameValidation":
             MessageLookupByLibrary.simpleMessage("You need to enter a username")
       };

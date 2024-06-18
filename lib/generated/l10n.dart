@@ -279,6 +279,56 @@ class S {
       args: [],
     );
   }
+
+  /// `Your password or username is wrong`
+  String get badCredentials {
+    return Intl.message(
+      'Your password or username is wrong',
+      name: 'badCredentials',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `La tâche n'a pas été trouvé`
+  String get taskNotFound {
+    return Intl.message(
+      'La tâche n\'a pas été trouvé',
+      name: 'taskNotFound',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your username is too short`
+  String get usernameTooShort {
+    return Intl.message(
+      'Your username is too short',
+      name: 'usernameTooShort',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `your password is too short`
+  String get passwordTooShort {
+    return Intl.message(
+      'your password is too short',
+      name: 'passwordTooShort',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `this username is already taken`
+  String get usernameAlreadyTaken {
+    return Intl.message(
+      'this username is already taken',
+      name: 'usernameAlreadyTaken',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

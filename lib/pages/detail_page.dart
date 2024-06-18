@@ -65,7 +65,7 @@ class _DetailPageState extends State<DetailPage> {
     try {
       return await getTaskDetail(widget.id);
     } on DioException {
-      showSnackBar("La tâche n'a pas été trouvé");
+      showSnackBar(S.current.taskNotFound);
       isFabEnable = false;
       imgBtnIsEnable = false;
       return TaskDetailPhotoResponse();

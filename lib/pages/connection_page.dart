@@ -38,7 +38,7 @@ class _ConnectionPageState extends State<ConnectionPage> {
       } on DioException catch (e) {
         if (e.response?.data == "InternalAuthenticationServiceException") {
           showSnackBar(
-              "Votre nom d'utilisateur ou votre mot de passe est mauvais");
+              S.current.badCredentials);
         } else {
           showSnackBar(S.current.globalError);
         }
