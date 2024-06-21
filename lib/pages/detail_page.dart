@@ -36,7 +36,7 @@ class _DetailPageState extends State<DetailPage> {
     pickedImage = await picker.pickImage(source: ImageSource.gallery);
     if (pickedImage != null) {
       String res = await saveImage(pickedImage!, widget.id);
-      imageURL = 'http://10.0.2.2:8080/file/$res';
+      imageURL = 'http://10.0.2.2:8080/file/$res?width=325';
     }
 
     imgBtnIsEnable = true;
@@ -96,7 +96,7 @@ class _DetailPageState extends State<DetailPage> {
                   percentageDone ??= item.percentageDone;
           
                   if (item.photoId > 0) {
-                    imageURL = 'http://10.0.2.2:8080/file/${item.photoId}';
+                    imageURL = 'http://10.0.2.2:8080/file/${item.photoId}?width=325';
                   }
                   return buildBody(item, context);
                 } else {
@@ -147,19 +147,22 @@ class _DetailPageState extends State<DetailPage> {
   Column buildImageSection() {
     return Column(
       children: [
-        (imageURL == "")
-            ? const Icon(
-                Icons.add,
-                color: Colors.grey,
-                size: 70,
-              )
-            : CachedNetworkImage(
-                imageUrl: imageURL,
-                placeholder: (context, url) => const Center(
-                  child: CircularProgressIndicator(),
+        SizedBox(
+          width: 300,
+          child: (imageURL == "")
+              ? const Icon(
+                  Icons.add,
+                  color: Colors.grey,
+                  size: 70,
+                )
+              : CachedNetworkImage(
+                  imageUrl: imageURL,
+                  placeholder: (context, url) => const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),
-                errorWidget: (context, url, error) => const Icon(Icons.error),
-              ),
+        ),
         MaterialButton(
           onPressed: imgBtnIsEnable ? getImage : null,
           color: Colors.blue,
